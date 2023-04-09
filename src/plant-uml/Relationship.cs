@@ -5,12 +5,12 @@ namespace cs2pu.plant_uml
     public class Relationship
     {
         private readonly RelationType _type;
-        private readonly Node _dependentNode;
+        private readonly INode _dependentNode;
 
         public Relationship
         (
             RelationType type,
-            Node dependentNode
+            INode dependentNode
         )
         {
             _type = type;

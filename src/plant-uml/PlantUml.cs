@@ -1,38 +1,32 @@
 using cs2pu.plant_uml.node;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace cs2pu.plant_uml
 {
     public class PlantUml
     {
-        private readonly IReadOnlyCollection<Node> _nodes;
-        public PlantUml()
-        {
-            _nodes = new List<Node>();
-        }
-        public PlantUml(List<Node> nodes)
+        private readonly IReadOnlyCollection<INode> _nodes;
+        public static PlantUml Empty => new PlantUml(new List<INode>());
+
+        private PlantUml(List<INode> nodes)
         {
             _nodes = nodes;
         }
 
-        public PlantUml Add(Node node)
+        public PlantUml Add(IReadOnlyCollection<INode> nodes)
         {
-            return new PlantUml(new List<Node>() { node });
-        }
-        public PlantUml Add(PlantUml pu)
-        {
-            var nodes = new List<Node>();
-            nodes.AddRange(_nodes);
-            nodes.AddRange(pu._nodes);
-            return new PlantUml(nodes);
+            var addedNodes = new List<INode>(nodes);
+            addedNodes.AddRange(_nodes);
+            return new PlantUml(addedNodes);
         }
 
-        public override string ToString()
+        public string Serialize()
         {
             string text = string.Empty;
-            text += "@startuml class\n";
+            text += "@startuml class_diagram\n";
             foreach (var node in _nodes)
             {
-                text += $"{node.ToString()}\n";
+                text += $"{node.Serialize()}\n";
             }
             text += "@enduml\n";
             return text;

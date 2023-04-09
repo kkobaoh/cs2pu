@@ -1,36 +1,21 @@
 using cs2pu.plant_uml;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using cs2pu.plant_uml.node;
 
 namespace cs2pu.converter
 {
     public class Converter
     {
-
         internal PlantUml Execute(CSharpDirectory csDirectory)
         {
-            var pu = new PlantUml();
+            var pu = PlantUml.Empty;
             foreach (var file in csDirectory.Files)
             {
                 var source = file.Read();
-                var tree = CSharpSyntaxTree.ParseText(source);
-                var root = tree.GetRoot();
-                var nodes = root.DescendantNodes().OfType<BaseTypeDeclarationSyntax>();
-                pu = pu.Add(CreatePlantUml(nodes));
-            }
-            return pu;
-        }
 
-        public PlantUml CreatePlantUml(IEnumerable<BaseTypeDeclarationSyntax> nodes)
-        {
-            var pu = new PlantUml();
-            foreach (var node in nodes)
-            {
-                var name = node.Identifier.Text;
-                var kind = node.Kind();
+                var factory = new NodeFactory(source);
+                var nodes = factory.Create();
 
-                var puNode = new Node(name, kind);
-                pu = pu.Add(puNode);
+                pu = pu.Add(nodes);
             }
             return pu;
         }

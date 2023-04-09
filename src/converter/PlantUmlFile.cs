@@ -30,9 +30,8 @@ namespace cs2pu.converter
         {
             using (var stream = new StreamWriter(_path, false, Encoding.UTF8))
             {
-                stream.Write(pu.ToString());
+                stream.Write(pu.Serialize());
             }
         }
-
     }
 }
